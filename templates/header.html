@@ -1,0 +1,16 @@
+<header>
+    <a href="/">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#fff" d="M4 8H2v12a2 2 0 0 0 2 2h12v-2H4z" />
+            <path fill="#fff"
+                d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 12V6l7 4z" />
+        </svg>
+    </a>
+    <form method="GET" action="/search">
+        <div id="search-input-container">
+            <input id="search-input" name="q" type="text" placeholder="s" autocomplete="off" value="{{ q }}">
+            <label for="search-input" id="search-input-label">search</label>
+        </div>
+        <button type="submit">search</button>
+    </form>
+</header>
