@@ -5,14 +5,14 @@ import os
 import pytube
 
 from fastapi import FastAPI, Form, Request
+from fastapi.exceptions import HTTPException
 from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-# API_KEY = 'AIzaSyD-iPIButEeee6JUNaJe7jGqKUwlK6CP-w'
-API_KEY = os.environ.get('YOUTUBE_API_KEY')
-app = FastAPI()
 rc, session = None, None
+API_KEY = os.environ.get('YOUTUBE_API_KEY')
+
 app = FastAPI()
 
 
@@ -20,7 +20,8 @@ app = FastAPI()
 async def app_startup():
     global rc, session
     redis_host = os.environ.get('REDIS_HOST', 'localhost')
-    rc = aioredis.from_url(f'redis://{redis_host}', decode_responses=True)
+    redis_port = os.environ.get('REDIS_PORT', 6379)
+    rc = aioredis.from_url(f'redis://{redis_host}:{redis_port}', decode_responses=True)
     session = aiohttp.ClientSession(headers={'Accept': 'application/json'})
 
 
@@ -42,6 +43,7 @@ async def main(request: Request):
         cahced = json.loads(cahced)
         return templates.TemplateResponse('index.html', {'request': request, 'items': cahced['items']})
 
+    print(API_KEY)
     params = {'part': 'snippet', 'maxResults': 18, 'key': API_KEY, 'countryCode': 'PL'}
     async with session.get('https://youtube.googleapis.com/youtube/v3/search', params=params) as r:
         if r.status != 200:
@@ -83,7 +85,6 @@ async def get_video(request: Request, video_id: str , raw: bool | None = None):
     data = {}
     params = {'part': 'snippet', 'id': video_id, 'key': API_KEY}
     async with session.get('https://www.googleapis.com/youtube/v3/videos', params=params) as r:
-        print(r.json())
         res_json = await r.json()
         items = res_json['items']
         if len(items) == 0:
@@ -120,7 +121,6 @@ async def get_playlist(request: Request, playlist_id: str):
         playlist_items = await r.json()
 
     for item in playlist_items['items']:
-        print(item)
         video = {
             'title': item['snippet']['title'], 
             'thumbnail': item['snippet']['thumbnails']['default']['url'] if item['snippet']['thumbnails'] else None, 
@@ -135,3 +135,8 @@ async def get_playlist(request: Request, playlist_id: str):
 @app.get('/channel/{channel_id}')
 async def get_channel(request: Request, channel_id: str):
     return templates.TemplateResponse('channel.html', {'request': request})
+
+
+@app.exception_handler(404)
+async def not_found(request: Request, exc: HTTPException):
+    return templates.TemplateResponse("404.html", {"request": request}, status_code=404)

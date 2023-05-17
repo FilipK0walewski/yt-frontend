@@ -24,28 +24,22 @@ const disableLoading = () => {
 
 const setVideo = () => {
     document.documentElement.scrollTop = 0
-    // enableLoading()
     videoPlayer.pause()
     videoSource.setAttribute('src', null)
-
 
     const videoId = playlistVideos.children[n].getAttribute('value')
     params.set('video', videoId)
     url.search = params.toString();
     window.history.replaceState({}, '', url.href)
 
-    fetch(`http://127.0.0.1:8000/video/${videoId}?raw=true`)
+    fetch(`${url.origin}/video/${videoId}?raw=true`)
     .then(res => res.json())
     .then(data => {
         videoSource.setAttribute('src', data['url'])
         songTitle.innerText = data['title']
-        // disableLoading()
         videoPlayer.load()
         videoPlayer.play()
     })
-    // .catch(() => {
-    //     disableLoading()
-    // })
 }
 
 const handleVideoChange = (e) => {
