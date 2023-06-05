@@ -1,42 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+{% include "header.html" %}
+<main class="playlist-container">
+    <div id="loading-screen"></div>
+    <p id="loading-text">loading</p>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles.css">
-    <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-    <title>playlist - {{ data.title }}</title>
-</head>
+    <div id="video-container">
+        <video id="video-player" controls autoplay muted>
+            <source id="video-source" type="video/mp4">
+        </video>
+        <button id="player-btn-prev" class="player-button">previous</button>
+        <button id="player-btn-next" class="player-button">next</button>
+        <h1>{{ data.title }}</h1>
+        <p id="song-title"></p>
+    </div>
 
-<body>
-    {% include "header.html" %}
-    <main class="playlist-container">
-        <div id="loading-screen"></div>
-        <p id="loading-text">loading</p>
-
-        <div id="video-container">
-            <video id="video-player" controls autoplay muted>
-                <source id="video-source" type="video/mp4">
-            </video>
-            <button id="player-btn-prev" class="player-button">previous</button>
-            <button id="player-btn-next" class="player-button">next</button>
-            <h1>{{ data.title }}</h1>
-            <p id="song-title"></p>
-        </div>
-
-        <ul id="playlist-videos">
-            {% for video in data.videos %}
-            <li id="{{ video.id }}" key="{{ loop.index }}" value="{{ video.id }}" class="playlist-video">
-                <img key="{{ loop.index }}" src="{{ video.thumbnail }}">
-                <span key="{{ loop.index }}">{{ video.title }}</span>
-            </li>
-            {% endfor %}
-        </ul>
-    </main>
-
-    <script src="/static/player.js"></script>
+    <ul id="playlist-videos">
+        {% for video in data.videos %}
+        <li id="{{ video.id }}" key="{{ loop.index }}" value="{{ video.id }}" class="playlist-video">
+            <img key="{{ loop.index }}" src="{{ video.thumbnail }}">
+            <span key="{{ loop.index }}">{{ video.title }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</main>
+<script src="/static/player.js"></script>
 </body>
 
 </html>

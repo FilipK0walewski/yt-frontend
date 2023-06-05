@@ -1,44 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles.css">
-    <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
-    <title>Search {% if q %} - {{ q }} {% endif %}</title>
-</head>
-
-<body>
-    {% include "header.html" %}
-    <main>
-        <ul class="search-items">
-            {% for item in items %}
-            <li class="search-item">
-                {% if item.id.kind == 'youtube#video' %}
-                <a href="/video/{{item.id.videoId}}" class="search-item-thumbnail">
-                    <img src="{{ item.snippet.thumbnails.medium.url }}" alt="thumbnail" loading="lazy">
-                </a>
-                <a class="search-item-title" href="/video/{{item.id.videoId}}">{{ item.snippet.title }}</a>
-                {% elif item.id.kind == 'youtube#playlist' %}
-                <a href="/playlist/{{item.id.playlistId}}" class="search-item-thumbnail">
-                    <img src="{{ item.snippet.thumbnails.medium.url }}" alt="thumbnail" loading="lazy">
-                </a>
-                <a class="search-item-title" href="/playlist/{{item.id.playlistId}}">{{ item.snippet.title }}</a>
-                <span class="search-item-playlist">PLAYLIST</span>
-                {% elif item.id.kind == 'youtube#channel' %}
-                <a href="/channel/{{item.id.channelId}}" class="thumbnail-container">
-                    <img class="channel-thumbnail" src="{{ item.snippet.thumbnails.medium.url }}" alt="{{ item.snippet.title }}" loading="lazy">
-                </a>
-                {% endif %}
-                <a class="search-item-channel" href="/channel/{{ item.snippet.channelId }}">
-                    {{ item.snippet.channelTitle }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </main>
+{% include "header.html" %}
+<main>
+    <ul class="search-items">
+        {% for item in items %}
+        <li class="search-item">
+            {% if item.id.kind == 'youtube#video' %}
+            <a href="/video/{{item.id.videoId}}" class="search-item-thumbnail">
+                <img src="{{ item.snippet.thumbnails.medium.url }}" alt="thumbnail" loading="lazy">
+            </a>
+            <a class="search-item-title" href="/video/{{item.id.videoId}}">{{ item.snippet.title }}</a>
+            {% elif item.id.kind == 'youtube#playlist' %}
+            <a href="/playlist/{{item.id.playlistId}}" class="search-item-thumbnail">
+                <img src="{{ item.snippet.thumbnails.medium.url }}" alt="thumbnail" loading="lazy">
+            </a>
+            <a class="search-item-title" href="/playlist/{{item.id.playlistId}}">{{ item.snippet.title }}</a>
+            <span class="search-item-playlist">PLAYLIST</span>
+            {% elif item.id.kind == 'youtube#channel' %}
+            <a href="/channel/{{item.id.channelId}}" class="thumbnail-container">
+                <img class="channel-thumbnail" src="{{ item.snippet.thumbnails.medium.url }}"
+                    alt="{{ item.snippet.title }}" loading="lazy">
+            </a>
+            {% endif %}
+            <a class="search-item-channel" href="/channel/{{ item.snippet.channelId }}">
+                {{ item.snippet.channelTitle }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</main>
 </body>
 
 </html>
